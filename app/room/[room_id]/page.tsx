@@ -54,27 +54,51 @@ export default function RoomPage() {
 
     // 초기 데이터 조회 및 구독
     useEffect(() => {
-        if (!room_id) return
-            ;(async () => {
-            const { data: roomData } = await supabase.from('rooms').select('title').eq('room_id', room_id).single()
-            if (roomData) {
-                setRoomTitle(roomData.title)
-                setTitleInput(roomData.title)
-            }
-            const { data: statusData } = await supabase.from('statuses').select('*').eq('room_id', room_id)
-            if (statusData) setStatusList(statusData)
-        })()
+        if (!room_id) return;
 
-        const channel = supabase.channel(`room:${room_id}`)
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'rooms', filter: `room_id=eq.${room_id}` }, payload => {
-                setRoomTitle(payload.new.title)
-            })
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'statuses', filter: `room_id=eq.${room_id}` }, payload => {
-                setStatusList(prev => prev.filter(u => u.user_id !== payload.new.user_id).concat(payload.new))
-            })
-            .subscribe()
-        return () => supabase.removeChannel(channel)
-    }, [room_id])
+        (async () => {
+            const { data: roomData } = await supabase
+                .from('rooms')
+                .select('title')
+                .eq('room_id', room_id)
+                .single();
+            if (roomData) {
+                setRoomTitle(roomData.title);
+                setTitleInput(roomData.title);
+            }
+
+            const { data: statusData } = await supabase
+                .from('statuses')
+                .select('*')
+                .eq('room_id', room_id);
+            if (statusData) setStatusList(statusData);
+        })();
+
+        const channel = supabase
+            .channel(`room:${room_id}`)
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'rooms', filter: `room_id=eq.${room_id}` },
+                (payload) => {
+                    setRoomTitle(payload.new.title);
+                }
+            )
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'statuses', filter: `room_id=eq.${room_id}` },
+                (payload) => {
+                    setStatusList((prev) =>
+                        prev.filter((u) => u.user_id !== payload.new.user_id).concat(payload.new)
+                    );
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [room_id]);
+
 
     // 방 제목 저장
     const saveTitle = async () => {
