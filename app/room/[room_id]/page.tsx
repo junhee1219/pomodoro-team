@@ -64,7 +64,7 @@ export default function RoomPage() {
                 .from('rooms')
                 .select('title')
                 .eq('room_id', room_id)
-                .single<{ title: string }>();
+                .maybeSingle<{ title: string }>();
             if (roomData) {
                 setRoomTitle(roomData.title);
                 setTitleInput(roomData.title);
