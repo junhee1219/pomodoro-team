@@ -60,11 +60,14 @@ export default function RoomPage() {
         const myName = localStorage.getItem('nickname');
 
         const fetchInitialData = async () => {
-            const {data: roomData} = await supabase
+            const { data } = await supabase
                 .from('rooms')
                 .select('title')
                 .eq('room_id', room_id)
-                .maybeSingle<{ title: string }>();
+                .maybeSingle();
+
+            const roomData = data as { title: string } | null;
+
             if (roomData) {
                 setRoomTitle(roomData.title);
                 setTitleInput(roomData.title);
