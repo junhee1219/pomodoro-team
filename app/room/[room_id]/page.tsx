@@ -64,7 +64,7 @@ export default function RoomPage() {
                 .from('rooms')
                 .select('title')
                 .eq('room_id', room_id)
-                .single();
+                .single<{ title: string }>();
             if (roomData) {
                 setRoomTitle(roomData.title);
                 setTitleInput(roomData.title);
@@ -109,7 +109,7 @@ export default function RoomPage() {
             .on(
                 'postgres_changes' as any,
                 {event: '*', schema: 'public', table: 'statuses', filter: `room_id=eq.${room_id}`},
-                (payload) => {
+                (payload: { eventType: 'INSERT' | 'UPDATE' | 'DELETE'; new: UserStatus; old: UserStatus }) => {
                     console.log('[Supabase Realtime] Event received:', payload);
                     setStatusList(prev => {
                         let newList = [...prev];
