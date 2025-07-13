@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import {useEffect, useState} from 'react'
+import {motion} from 'framer-motion'
 
 interface UserStatus {
     user_id: string
@@ -18,7 +18,7 @@ interface UserListProps {
     currentUser: string
 }
 
-export default function UserList({ list, removeUser, currentUser }: UserListProps) {
+export default function UserList({list, removeUser, currentUser}: UserListProps) {
     const [now, setNow] = useState(() => Math.floor(Date.now() / 1000))
 
     // 매초 now 업데이트
@@ -69,15 +69,15 @@ export default function UserList({ list, removeUser, currentUser }: UserListProp
                                 strokeWidth="5"
                                 fill="none"
                                 strokeDasharray={circumference}
-                                animate={{ strokeDashoffset: dashOffset }}
-                                transition={{ ease: 'linear', duration: 1 }}
+                                animate={{strokeDashoffset: dashOffset}}
+                                transition={{ease: 'linear', duration: 1}}
                             />
                         </svg>
 
                         {/* 사용자 정보 */}
                         <div className="flex-1">
                             <div className="flex justify-between items-center">
-                <span className="font-semibold" style={{ color: u.color || 'black' }}>
+                <span className="font-semibold" style={{color: u.color || 'black'}}>
                   {u.user_id}{u.user_id === currentUser && ' (나)'}
                 </span>
                                 <span className="text-sm text-gray-600">

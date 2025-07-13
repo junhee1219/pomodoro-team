@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import {useEffect, useState} from 'react'
+import {motion} from 'framer-motion'
 
 interface TimerProps {
     startTs: number | null
@@ -15,6 +15,7 @@ interface TimerProps {
     setCustomMinutes: (v: number) => void
     message: string
     setMessage: (v: string) => void
+    onMessageBlur: () => void
     color: string
 }
 
@@ -30,6 +31,7 @@ export default function Timer({
                                   setCustomMinutes,
                                   message,
                                   setMessage,
+                                  onMessageBlur,
                                   color,
                               }: TimerProps) {
     const [now, setNow] = useState(() => Date.now())
@@ -74,13 +76,13 @@ export default function Timer({
                         strokeWidth="10"
                         fill="none"
                         strokeDasharray={circumference}
-                        initial={{ strokeDashoffset: circumference }}
-                        animate={{ strokeDashoffset: dashOffset }}
-                        transition={{ ease: 'linear', duration: 1 }}
+                        initial={{strokeDashoffset: circumference}}
+                        animate={{strokeDashoffset: dashOffset}}
+                        transition={{ease: 'linear', duration: 1}}
                     />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="text-4xl font-mono" style={{ color }}>
+                    <div className="text-4xl font-mono" style={{color}}>
                         {minutes}:{seconds}
                     </div>
                     <div className="mt-2 flex space-x-2">
@@ -122,6 +124,7 @@ export default function Timer({
                 <input
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onBlur={onMessageBlur}
                     placeholder="상태 메시지"
                     className="w-full border rounded-full px-3 py-2 text-sm"
                 />
@@ -129,3 +132,4 @@ export default function Timer({
         </div>
     )
 }
+''
