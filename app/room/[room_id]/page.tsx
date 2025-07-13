@@ -106,7 +106,7 @@ export default function RoomPage() {
             .on(
                 'postgres_changes' as any,
                 {event: '*', schema: 'public', table: 'rooms', filter: `room_id=eq.${room_id}`},
-                (payload) => {
+                (payload: { new: { [key: string]: any } }) => {
                     if (payload.new?.title) setRoomTitle(payload.new.title);
                 }
             )
