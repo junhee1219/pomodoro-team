@@ -73,7 +73,8 @@ export default function RoomPage() {
             const {data: statusData} = await supabase
                 .from('statuses')
                 .select('*')
-                .eq('room_id', room_id);
+                .eq('room_id', room_id)
+                .returns<UserStatus[]>();
             if (statusData) {
                 setStatusList(statusData);
                 if (myName) {
